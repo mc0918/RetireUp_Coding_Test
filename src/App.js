@@ -1,9 +1,11 @@
-import {Table} from './components/table/Table';
+import { Table } from "./components/table/Table";
 
 function App() {
   return (
     <div className="App">
-      <Table />
+      <div id="table-container" style={{margin: '50px 0 0 0'}}>
+        <Table />
+      </div>
     </div>
   );
 }
