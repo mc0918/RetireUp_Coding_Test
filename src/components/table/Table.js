@@ -6,6 +6,8 @@ import * as returns from "../../assets/returns.json";
  could dynamically import returns and avoid state but this follows more established patterns for working with API calls and/or state management like redux
  plus, static imports that are small mean better performance according to React docs
 */
+
+//will take another argument for start year that user wants
 const calculateCumulativeReturn = (data) => {
   let initialReturn = parseFloat(data[data.length - 1].totalReturn);
   let currentReturn;
@@ -18,8 +20,6 @@ const calculateCumulativeReturn = (data) => {
     return { ...d, cumulativeReturn: cumulativeReturn };
   });
 };
-
-//((d.totalReturn - startRow.totalReturn) / startRow.totalReturn)
 
 export const Table = () => {
   const [rows, setRows] = useState([]);
