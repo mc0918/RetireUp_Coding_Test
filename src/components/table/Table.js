@@ -8,15 +8,14 @@ import * as returns from "../../assets/returns.json";
 */
 
 //will take another argument for start year that user wants
-const calculateCumulativeReturn = (data) => {
-  let initialReturn = parseFloat(data[data.length - 1].totalReturn);
+const calculateCumulativeReturn = (tableData) => {
+  let initialReturn = parseFloat(tableData[0].totalReturn);
   let currentReturn;
   let cumulativeReturn;
-  console.log(data[0]);
-  console.log(initialReturn);
-  return data.map((d) => {
+  
+  return tableData.map((d) => {
     currentReturn = parseFloat(d.totalReturn);
-    cumulativeReturn = ((currentReturn - initialReturn) / initialReturn) * 100;
+    cumulativeReturn = (((currentReturn - initialReturn) / initialReturn) * 100).toFixed(2);
     return { ...d, cumulativeReturn: cumulativeReturn };
   });
 };
@@ -26,7 +25,8 @@ export const Table = () => {
 
   // empty array passed as second argument so useEffect only runs once in case of multiple renders (S&P 500 Total Returns won't change)
   useEffect(() => {
-    setRows(calculateCumulativeReturn(returns.default));
+    
+    setRows(calculateCumulativeReturn(returns.default.reverse()));
   }, []);
 
   const renderTable = () => {
@@ -43,7 +43,7 @@ export const Table = () => {
   };
 
   const renderHeader = () => {
-    let header = ["Year", "Total Return", "Cumulative Return"];
+    let header = ["Year", "Total Return", "Cumulative Return (%)"];
     return header.map((label) => {
       return <th key={label}>{label}</th>;
     });
