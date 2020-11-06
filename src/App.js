@@ -3,7 +3,7 @@ import { Table } from "./components/table/Table";
 function App() {
   return (
     <div className="App">
-      <div id="table-container" style={{margin: '50px 0 0 0'}}>
+      <div id="table-container">
         <Table />
       </div>
     </div>

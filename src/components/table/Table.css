@@ -12,11 +12,11 @@
   }
   
   #returns td, #returns th {
-    border: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
     padding: 8px;
   }
   
-  #returns tr:nth-child(even){background-color: #f2f2f2;}
+  /* #returns tr:nth-child(even){background-color: #f2f2f2;} */
   
   #returns tr:hover {background-color: #ddd;}
   
@@ -24,6 +24,6 @@
     padding-top: 12px;
     padding-bottom: 12px;
     text-align: center;
-    background-color: #4CAF50;
-    color: white;
+    font-weight: bolder;
+    color: black;
   }
