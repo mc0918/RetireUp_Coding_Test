@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useReducer, useState } from "react";
 import Slider, { Range } from "rc-slider";
 import "rc-slider/assets/index.css";
 import Row from "../row/Row";
@@ -27,14 +27,31 @@ function calculateCumulativeReturn(tableData) {
   });
 }
 
+function reducer(state, action) {
+  switch (action.type) {
+    case "setMinYear":
+      return { minYear: action.payload, maxYear: state.maxYear };
+    case "setMaxYear":
+      return { minYear: state.minYear, maxYear: action.payload };
+    default:
+      throw new Error();
+  }
+}
+
 export const Table = () => {
   const [rows, setRows] = useState([]);
-  const [yearRange, setYearRange] = useState({ start: 0, end: 0 }); // TODO: make this useReducer instead?
+  const [yearRange, dispatch] = useReducer(reducer, { minYear: 0, maxYear: 0 });
+  const setYearRange = useCallback((type, input) => {
+    dispatch({ type: type, payload: input });
+  }, []);
 
   // empty array passed as second argument so useEffect only runs once in case of multiple renders (S&P 500 Total Returns won't change)
   useEffect(() => {
-    setRows(calculateCumulativeReturn(returns.default.reverse()));
-  }, []);
+    const r = calculateCumulativeReturn(returns.default.reverse());
+    setYearRange("setMinYear", r[0].year);
+    setYearRange("setMaxYear", r[r.length - 1].year);
+    setRows(r);
+  }, [setYearRange]);
 
   // separating rows into new component allows for addition of new columns
   const renderTable = () => {
@@ -52,7 +69,7 @@ export const Table = () => {
     });
   };
 
-  const renderHeader = () => {
+  const renderTableHeader = () => {
     let header = ["Year", "Total Return", "Cumulative Return (%)"];
     return header.map((label) => {
       return <th key={label}>{label}</th>;
@@ -60,15 +77,16 @@ export const Table = () => {
   };
 
   return (
-    <div>
+    <>
       <table id="returns">
         <tbody>
-          <tr>{renderHeader()}</tr>
+          <tr>{renderTableHeader()}</tr>
           {renderTable(rows)}
         </tbody>
       </table>
-      <Slider />
-      <Range />
-    </div>
+      <div>
+        <Range />
+      </div>
+    </>
   );
 };
