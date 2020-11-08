@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useReducer, useState } from "react";
-import Slider, { Range } from "rc-slider";
+import { Range } from "rc-slider";
 import "rc-slider/assets/index.css";
 import Row from "../row/Row";
 import "./Table.css";
@@ -40,26 +40,33 @@ function reducer(state, action) {
 
 export const Table = () => {
   const [rows, setRows] = useState([]);
+  const [filteredRows, setFilteredRows] = useState([]);
   const [yearRange, dispatch] = useReducer(reducer, { minYear: 0, maxYear: 0 });
   const setYearRange = useCallback((type, input) => {
     dispatch({ type: type, payload: input });
   }, []);
 
+  const handleChange = (event) => {
+    setYearRange("setMinYear", event[0]);
+    setYearRange("setMaxYear", event[1]);
+    let updatedRows = rows.filter(
+      (row) => row.year >= yearRange.minYear && row.year <= yearRange.maxYear
+    );
+    setFilteredRows(updatedRows);
+    console.log(filteredRows);
+  };
   // empty array passed as second argument so useEffect only runs once in case of multiple renders (S&P 500 Total Returns won't change)
   useEffect(() => {
     const r = calculateCumulativeReturn(returns.default.reverse());
     setYearRange("setMinYear", 1926);
     setYearRange("setMaxYear", r[r.length - 1].year);
     setRows(r);
+    setFilteredRows(r);
   }, [setYearRange]);
 
   // separating rows into new component allows for addition of new columns
   const renderTable = () => {
-    // console.log(rows, yearRange.minYear, yearRange.maxYear);
-    const sortedRows = rows.filter(
-      (row) => row.year >= yearRange.minYear || row.year <= yearRange.maxYear
-    );
-    return sortedRows.map((row) => {
+    return filteredRows.map((row) => {
       const { year, totalReturn, cumulativeReturn } = row;
       return (
         <tr key={year}>
@@ -86,7 +93,7 @@ export const Table = () => {
         <table id="returns">
           <tbody>
             <tr>{renderTableHeader()}</tr>
-            {renderTable(rows)}
+            {renderTable(filteredRows)}
           </tbody>
         </table>
       </div>
@@ -94,12 +101,7 @@ export const Table = () => {
         <Range
           min={1926}
           max={2019}
-          onChange={(event) => {
-            setYearRange("setMinYear", event[0]);
-            setYearRange("setMaxYear", event[1]);
-
-            // console.log(sortedRows);
-          }}
+          onChange={(event) => handleChange(event)}
         />
       </div>
     </div>
