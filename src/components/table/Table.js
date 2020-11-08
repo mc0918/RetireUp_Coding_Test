@@ -20,9 +20,12 @@ function calculateCumulativeReturn(tableData) {
   return tableData.map((d) => {
     currentReturn = parseFloat(d.totalReturn);
     cumulativeReturn = (
-      ((currentReturn - initialReturn) / initialReturn) *
+      Math.abs(((currentReturn - initialReturn) / initialReturn) *
       100
-    ).toFixed(2);
+    )).toFixed(2);
+    if(currentReturn < initialReturn){
+        cumulativeReturn = -cumulativeReturn
+    }
     return { ...d, cumulativeReturn: cumulativeReturn };
   });
 }
@@ -46,13 +49,14 @@ export const Table = () => {
     dispatch({ type: type, payload: input });
   }, []);
 
+  // dragging left slider to 1926 doesn't show row for 1926 until the right side is moved
   const handleChange = (event) => {
     setYearRange("setMinYear", event[0]);
     setYearRange("setMaxYear", event[1]);
     let updatedRows = rows.filter(
       (row) => row.year >= yearRange.minYear && row.year <= yearRange.maxYear
     );
-    setFilteredRows(updatedRows);
+    setFilteredRows(calculateCumulativeReturn(updatedRows));
     console.log(filteredRows);
   };
   // empty array passed as second argument so useEffect only runs once in case of multiple renders (S&P 500 Total Returns won't change)
@@ -81,6 +85,7 @@ export const Table = () => {
   };
 
   const renderTableHeader = () => {
+    // this should be dynamically generated if everything else is... 
     let header = ["Year", "Total Return", "Cumulative Return (%)"];
     return header.map((label) => {
       return <th key={label}>{label}</th>;
