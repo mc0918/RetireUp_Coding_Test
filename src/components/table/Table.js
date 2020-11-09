@@ -14,6 +14,7 @@ import * as returns from "../../assets/returns.json";
 //doing this in useEffect() sometimes causes Table to render in descending order first
 const sortedReturns = returns.default.reverse();
 
+
 function calculateCumulativeReturn(tableData) {
   let initialReturn = parseFloat(tableData[0].totalReturn);
   let currentReturn;
@@ -42,6 +43,7 @@ function reducer(state, action) {
   }
 }
 
+//TODO: Table must re-render to display current max or min value 
 export const Table = () => {
   const [rows, setRows] = useState([]);
   const [filteredRows, setFilteredRows] = useState([]);
@@ -58,7 +60,6 @@ export const Table = () => {
       (row) => row.year >= yearRange.minYear && row.year <= yearRange.maxYear
     );
     setFilteredRows(calculateCumulativeReturn(updatedRows));
-    console.log(filteredRows);
   };
   // empty array passed as second argument so useEffect only runs once in case of multiple renders (S&P 500 Total Returns won't change)
   useEffect(() => {
@@ -93,6 +94,7 @@ export const Table = () => {
     });
   };
 
+
   return (
     <div className="flex-grid">
       <div className="flex-column">
@@ -105,11 +107,16 @@ export const Table = () => {
         </table>
       </div>
       <div className="flex-column">
+          <label>Select years to view</label>
         <Range
           min={1926}
           max={2019}
+          defaultValue={[1926,2019]}
           onChange={(event) => handleChange(event)}
         />
+        {/* React 17 and rc-slider's tooltip API cause problems when mousing over the handle, likely due to findDomNode's deprecation/lifecycles with functional components*/}
+        <label>{yearRange.minYear}</label>
+        <label style={{float: "right"}}>{yearRange.maxYear}</label>
       </div>
     </div>
   );
