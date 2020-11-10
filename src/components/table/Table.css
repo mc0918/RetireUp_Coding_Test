@@ -11,6 +11,7 @@
 .flex-column {
     flex: 1;
     margin: 5% 10% 10% 5%;
+    min-width: 800px;
 }
 
 #returns {

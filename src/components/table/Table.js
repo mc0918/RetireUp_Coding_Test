@@ -11,7 +11,6 @@ import * as returns from "../../assets/returns.json";
  plus, static imports that are small mean better performance according to React docs
 */
 
-
 function calculateCumulativeReturn(tableData) {
   let initialReturn = parseFloat(tableData[0].totalReturn);
   let currentReturn;
@@ -41,25 +40,21 @@ function reducer(state, action) {
 }
 
 const ascendingReturns = returns.default.reverse();
+console.log(ascendingReturns);
 
 const Table = () => {
   const rows = calculateCumulativeReturn(ascendingReturns);
+  const initialState = { minYear: rows[0].year, maxYear: rows[rows.length - 1].year }
 
-  const [yearRange, dispatch] = useReducer(reducer, { minYear: 0, maxYear: 0 });
+  const [yearRange, dispatch] = useReducer(reducer, initialState);
   const setYearRange = useCallback((type, input) => {
     dispatch({ type: type, payload: input });
   }, []);
 
-  // dragging left slider to 1926 doesn't show row for 1926 until the right side is moved
   const handleChange = (event) => {
     setYearRange("setMinYear", event[0]);
     setYearRange("setMaxYear", event[1]);
   };
-  // empty array passed as second argument so useEffect only runs once in case of multiple renders (S&P 500 Total Returns won't change)
-  useEffect(() => {
-    setYearRange("setMinYear", rows[0].year);
-    setYearRange("setMaxYear", rows[rows.length - 1].year);
-  }, [setYearRange]);
 
   // separating rows into new component allows for addition of new columns
   const renderTable = () => {
@@ -86,7 +81,6 @@ const Table = () => {
   };
 
   const renderTableHeader = () => {
-    // this should be dynamically generated if everything else is...
     let header = ["Year", "Total Return", "Cumulative Return (%)"];
     return header.map((label) => {
       return <th key={label}>{label}</th>;
@@ -99,9 +93,9 @@ const Table = () => {
         <div id="slider">
           <label>Select years to view</label>
           <Range
-            min={1926}
-            max={2019}
-            defaultValue={[1926, 2019]}
+            min={initialState.minYear}
+            max={initialState.maxYear}
+            defaultValue={[initialState.minYear, initialState.maxYear]}
             onChange={(event) => handleChange(event)}
           />
           {/* React 17 and rc-slider's tooltip API cause problems when mousing over the handle, likely due to findDomNode's deprecation/lifecycles with functional components*/}
