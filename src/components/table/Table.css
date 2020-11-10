@@ -10,8 +10,12 @@
 
 .flex-column {
     flex: 1;
-    margin: 5% 10% 10% 5%;
+    margin: 5% 10% 5% 10%;
     min-width: 800px;
+}
+
+#slider {
+  margin: 0 5% 0 5%;
 }
 
 #returns {
