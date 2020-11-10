@@ -14,7 +14,6 @@ import * as returns from "../../assets/returns.json";
 //doing this in useEffect() sometimes causes Table to render in descending order first
 const sortedReturns = returns.default.reverse();
 
-
 function calculateCumulativeReturn(tableData) {
   let initialReturn = parseFloat(tableData[0].totalReturn);
   let currentReturn;
@@ -43,10 +42,8 @@ function reducer(state, action) {
   }
 }
 
-//TODO: Table must re-render to display current max or min value 
-export const Table = () => {
+const Table = () => {
   const [rows, setRows] = useState([]);
-  const [filteredRows, setFilteredRows] = useState([]);
   const [yearRange, dispatch] = useReducer(reducer, { minYear: 0, maxYear: 0 });
   const setYearRange = useCallback((type, input) => {
     dispatch({ type: type, payload: input });
@@ -56,10 +53,7 @@ export const Table = () => {
   const handleChange = (event) => {
     setYearRange("setMinYear", event[0]);
     setYearRange("setMaxYear", event[1]);
-    let updatedRows = rows.filter(
-      (row) => row.year >= yearRange.minYear && row.year <= yearRange.maxYear
-    );
-    setFilteredRows(calculateCumulativeReturn(updatedRows));
+    
   };
   // empty array passed as second argument so useEffect only runs once in case of multiple renders (S&P 500 Total Returns won't change)
   useEffect(() => {
@@ -67,12 +61,19 @@ export const Table = () => {
     setYearRange("setMinYear", 1926);
     setYearRange("setMaxYear", r[r.length - 1].year);
     setRows(r);
-    setFilteredRows(r);
   }, [setYearRange]);
 
   // separating rows into new component allows for addition of new columns
   const renderTable = () => {
-    return filteredRows.map((row) => {
+    let updatedRows = rows.filter(
+      (row) => row.year >= yearRange.minYear && row.year <= yearRange.maxYear
+    );
+
+    if (updatedRows.length > 0) {
+      updatedRows = calculateCumulativeReturn(updatedRows);
+    }
+
+    return updatedRows.map((row) => {
       const { year, totalReturn, cumulativeReturn } = row;
       return (
         <tr key={year}>
@@ -94,7 +95,6 @@ export const Table = () => {
     });
   };
 
-
   return (
     <div className="flex-grid">
       <div className="flex-column">
@@ -102,22 +102,24 @@ export const Table = () => {
         <table id="returns">
           <tbody>
             <tr>{renderTableHeader()}</tr>
-            {renderTable(filteredRows)}
+            {renderTable()}
           </tbody>
         </table>
       </div>
       <div className="flex-column">
-          <label>Select years to view</label>
+        <label>Select years to view</label>
         <Range
           min={1926}
           max={2019}
-          defaultValue={[1926,2019]}
+          defaultValue={[1926, 2019]}
           onChange={(event) => handleChange(event)}
         />
         {/* React 17 and rc-slider's tooltip API cause problems when mousing over the handle, likely due to findDomNode's deprecation/lifecycles with functional components*/}
         <label>{yearRange.minYear}</label>
-        <label style={{float: "right"}}>{yearRange.maxYear}</label>
+        <label style={{ float: "right" }}>{yearRange.maxYear}</label>
       </div>
     </div>
   );
 };
+
+export default Table;
