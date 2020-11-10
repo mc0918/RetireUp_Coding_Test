@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useReducer } from "react";
+import { useState } from "react";
 import { Range } from "rc-slider";
 import "rc-slider/assets/index.css";
 import Row from "../row/Row";
@@ -28,35 +28,19 @@ function calculateCumulativeReturn(tableData) {
   });
 }
 
-function reducer(state, action) {
-  switch (action.type) {
-    case "setMinYear":
-      return { minYear: action.payload, maxYear: state.maxYear };
-    case "setMaxYear":
-      return { minYear: state.minYear, maxYear: action.payload };
-    default:
-      throw new Error();
-  }
-}
-
-const ascendingReturns = returns.default.reverse();
-console.log(ascendingReturns);
-
 const Table = () => {
-  const rows = calculateCumulativeReturn(ascendingReturns);
-  const initialState = { minYear: rows[0].year, maxYear: rows[rows.length - 1].year }
-
-  const [yearRange, dispatch] = useReducer(reducer, initialState);
-  const setYearRange = useCallback((type, input) => {
-    dispatch({ type: type, payload: input });
-  }, []);
+  const rows = calculateCumulativeReturn(returns.default).reverse();
+  const initialState = {
+    minYear: rows[0].year,
+    maxYear: rows[rows.length - 1].year,
+  };
+  const [yearRange, setYearRange] = useState(initialState);
 
   const handleChange = (event) => {
-    setYearRange("setMinYear", event[0]);
-    setYearRange("setMaxYear", event[1]);
+    setYearRange({ minYear: event[0], maxYear: event[1] });
   };
 
-  // separating rows into new component allows for addition of new columns
+  // separating Row into its own component allows for addition of new columns via props
   const renderTable = () => {
     let updatedRows = rows.filter(
       (row) => row.year >= yearRange.minYear && row.year <= yearRange.maxYear
@@ -102,9 +86,10 @@ const Table = () => {
           <label>{yearRange.minYear}</label>
           <label style={{ float: "right" }}>{yearRange.maxYear}</label>
         </div>
-        <br />
         <div id="table">
-          <label><h1>{"S&P 500 Returns By Year"}</h1></label>
+          <label>
+            <h1>{"S&P 500 Returns By Year"}</h1>
+          </label>
           <table id="returns">
             <tbody>
               <tr>{renderTableHeader()}</tr>
