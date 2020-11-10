@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useReducer, useState } from "react";
+import { useCallback, useEffect, useReducer } from "react";
 import { Range } from "rc-slider";
 import "rc-slider/assets/index.css";
 import Row from "../row/Row";
@@ -11,8 +11,6 @@ import * as returns from "../../assets/returns.json";
  plus, static imports that are small mean better performance according to React docs
 */
 
-//doing this in useEffect() sometimes causes Table to render in descending order first
-const sortedReturns = returns.default.reverse();
 
 function calculateCumulativeReturn(tableData) {
   let initialReturn = parseFloat(tableData[0].totalReturn);
@@ -42,8 +40,11 @@ function reducer(state, action) {
   }
 }
 
+const ascendingReturns = returns.default.reverse();
+
 const Table = () => {
-  const [rows, setRows] = useState([]);
+  const rows = calculateCumulativeReturn(ascendingReturns);
+
   const [yearRange, dispatch] = useReducer(reducer, { minYear: 0, maxYear: 0 });
   const setYearRange = useCallback((type, input) => {
     dispatch({ type: type, payload: input });
@@ -53,14 +54,11 @@ const Table = () => {
   const handleChange = (event) => {
     setYearRange("setMinYear", event[0]);
     setYearRange("setMaxYear", event[1]);
-    
   };
   // empty array passed as second argument so useEffect only runs once in case of multiple renders (S&P 500 Total Returns won't change)
   useEffect(() => {
-    const r = calculateCumulativeReturn(sortedReturns);
-    setYearRange("setMinYear", 1926);
-    setYearRange("setMaxYear", r[r.length - 1].year);
-    setRows(r);
+    setYearRange("setMinYear", rows[0].year);
+    setYearRange("setMaxYear", rows[rows.length - 1].year);
   }, [setYearRange]);
 
   // separating rows into new component allows for addition of new columns
@@ -98,25 +96,28 @@ const Table = () => {
   return (
     <div className="flex-grid">
       <div className="flex-column">
-        <label>{"S&P 500 Returns By Year"}</label>
-        <table id="returns">
-          <tbody>
-            <tr>{renderTableHeader()}</tr>
-            {renderTable()}
-          </tbody>
-        </table>
-      </div>
-      <div className="flex-column">
-        <label>Select years to view</label>
-        <Range
-          min={1926}
-          max={2019}
-          defaultValue={[1926, 2019]}
-          onChange={(event) => handleChange(event)}
-        />
-        {/* React 17 and rc-slider's tooltip API cause problems when mousing over the handle, likely due to findDomNode's deprecation/lifecycles with functional components*/}
-        <label>{yearRange.minYear}</label>
-        <label style={{ float: "right" }}>{yearRange.maxYear}</label>
+        <div id="slider">
+          <label>Select years to view</label>
+          <Range
+            min={1926}
+            max={2019}
+            defaultValue={[1926, 2019]}
+            onChange={(event) => handleChange(event)}
+          />
+          {/* React 17 and rc-slider's tooltip API cause problems when mousing over the handle, likely due to findDomNode's deprecation/lifecycles with functional components*/}
+          <label>{yearRange.minYear}</label>
+          <label style={{ float: "right" }}>{yearRange.maxYear}</label>
+        </div>
+        <br />
+        <div id="table">
+          <label><h1>{"S&P 500 Returns By Year"}</h1></label>
+          <table id="returns">
+            <tbody>
+              <tr>{renderTableHeader()}</tr>
+              {renderTable()}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );
