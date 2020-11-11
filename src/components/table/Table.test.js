@@ -43,12 +43,11 @@ describe("Range Slider", () => {
     expect(valueTwo).toEqual("2019");
   });
 
-
-  /**  NOTE 
-  * for some reason the right handle won't change 
-  * possibly due to how rc-slider-range handles events/synthetic events
-  * but the argument can be made that the functionality is the same thus the test is not needed (equivalency case)
-  */
+  /**  NOTE
+   * for some reason the right handle won't change
+   * possibly due to how rc-slider-range handles events/synthetic events
+   * but the argument can be made that the functionality is the same thus the test is not needed (equivalency case)
+   */
   test("Adjusting slider changes slider value", () => {
     let { container } = render(<Table />);
     const sliderHandles = container.querySelectorAll(".rc-slider-handle");
@@ -92,7 +91,6 @@ describe("Range Slider", () => {
     });
 
     const changedRows = screen.getAllByRole("row");
-    expect(startingRows[1]).not.toBeInTheDocument()
     expect(changedRows.length).toEqual(94);
     expect(changedRows[1].innerHTML).toContain("1927");
   });
