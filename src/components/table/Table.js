@@ -74,9 +74,11 @@ const Table = () => {
   return (
     <div className="flex-grid">
       <div className="flex-column">
-        <div id="slider">
-          <label>Select years to view</label>
+        <div id="slider-container">
+          <label htmlFor="slider">Select years to view</label>
           <Range
+            id="slider"
+            name="slider"
             min={initialState.minYear}
             max={initialState.maxYear}
             defaultValue={[initialState.minYear, initialState.maxYear]}
