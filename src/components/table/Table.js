@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { Range } from "rc-slider";
-import "rc-slider/assets/index.css";
+import { Range } from 'rc-slider';
+import 'rc-slider/assets/index.css';
 import Row from "../row/Row";
 import "./Table.css";
 import * as returns from "../../assets/returns.json";
@@ -75,18 +75,16 @@ const Table = () => {
     <div className="flex-grid">
       <div className="flex-column">
         <div id="slider-container">
-          <label htmlFor="slider">Select years to view</label>
+          <label>Select years to view</label>
           <Range
-            id="slider"
-            name="slider"
             min={initialState.minYear}
             max={initialState.maxYear}
             defaultValue={[initialState.minYear, initialState.maxYear]}
             onChange={(event) => handleChange(event)}
           />
           {/* React 17 and rc-slider's tooltip API cause problems when mousing over the handle, likely due to findDomNode's deprecation/lifecycles with functional components*/}
-          <label>{yearRange.minYear}</label>
-          <label style={{ float: "right" }}>{yearRange.maxYear}</label>
+          <label className="slider-label">{yearRange.minYear}</label>
+          <label className="slider-label" style={{ float: "right" }}>{yearRange.maxYear}</label>
         </div>
         <div id="table">
           <label>
