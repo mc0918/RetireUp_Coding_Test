@@ -4,7 +4,9 @@ import Header from "./components/header/Header";
 const App = () => {
   return (
     <div className="app">
-      <Header />
+      <div id="header-container">
+        <Header />
+      </div>
       <div id="page-container">
         <div className="flex-grid">
           <div className="flex-column-1">
