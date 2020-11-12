@@ -7,7 +7,7 @@ Bootstrapped with create-react-app, this is a single page application (SPA) that
 visit http://retireup-ui.s3-website.us-east-2.amazonaws.com/ to see the app hosted on an AWS s3 bucket
 
 Steps:
-1. create and AWS account and install the CLI
+1. create and AWS account and install the CLI (and set credentials)
 2. navigate to parent directory
 3. run "npm run cloudBuild && npm run cloudDeploy"
 4. log on to AWS console, navigate to the newly created bucket
@@ -15,7 +15,6 @@ Steps:
 
 Some caveats:
 1. cloudBuild will create a bucket. Running it twice will produce an error. If the bucket already exists try "npm run build && npm run cloudDeploy".
-2. The table will appear empty as there are some CSS conflicts occurring as of now. Inspect element to view the values.
 
 ### Components ###
 There are 3 custom components in this application: Table, Row, and Header.
