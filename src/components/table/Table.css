@@ -22,7 +22,6 @@
 #returns td {
   border-bottom: 1px solid #ddd;
   padding: 8px;
-  opacity: 75%;
   font-weight: lighter;
 }
 
@@ -37,7 +36,6 @@
 
 #returns tr > td[data-negative-value="true"] {
   color: red;
-  opacity: 75%;
 }
 
 #returns th {
