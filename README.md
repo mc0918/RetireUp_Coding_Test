@@ -13,7 +13,7 @@ Steps:
 4. log on to AWS console, navigate to the newly created bucket
 5. click on the bucket, click on properties, turn on static website hosting
 
-The table will be empty as the JSON file downloaded and accessed by Table.js is not yet in the build folder
+The table will appear empty as there is some CSS conflicts occurring as of now. Inspect element to view the values.
 
 ### Components ###
 There are 3 custom components in this application: Table, Row, and Header.
