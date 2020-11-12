@@ -13,7 +13,9 @@ Steps:
 4. log on to AWS console, navigate to the newly created bucket
 5. click on the bucket, click on properties, turn on static website hosting
 
-The table will appear empty as there is some CSS conflicts occurring as of now. Inspect element to view the values.
+Some caveats:
+1. cloudBuild will create a bucket. Running it twice will produce an error. If the bucket already exists try "npm run build && npm run cloudDeploy".
+2. The table will appear empty as there are some CSS conflicts occurring as of now. Inspect element to view the values.
 
 ### Components ###
 There are 3 custom components in this application: Table, Row, and Header.
