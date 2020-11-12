@@ -1,8 +1,12 @@
 html {
   width: 100vw;
+  margin: 0;
+  padding: 0;
 }
 
 body {
+  margin: 0;
+  padding: 0;
   background-color: #fafafa;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
     "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
@@ -16,6 +20,11 @@ code {
     monospace;
 }
 
+.app > #page-container {
+  margin-left: 5%;
+  margin-right: 5%;
+}
+
 .text-content {
   overflow-wrap: break-word;
   padding: 0 5% 0 5%;
@@ -26,12 +35,7 @@ code {
   margin-bottom: 0;
 }
 
-.app > #page-container {
-  margin-left: 5%;
-  margin-right: 5%;
-}
-
-@media only screen and (min-width: 769px) {
+@media only screen and (min-width: 1025px) {
   .flex-grid {
     display: flex;
     flex-wrap: wrap;
@@ -49,7 +53,7 @@ code {
   }
 }
 
-@media only screen and (max-width: 768px) {
+@media only screen and (max-width: 1024px) {
   .flex-grid {
     display: flex;
     flex-wrap: wrap;

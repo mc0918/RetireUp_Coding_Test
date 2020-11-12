@@ -5,12 +5,6 @@ import Row from "../row/Row";
 import "./Table.css";
 import * as returns from "../../assets/returns.json";
 
-/*
- DELETE THIS AND ADD TO README
- could dynamically import returns and avoid state but this follows more established patterns for working with API calls and/or state management like redux
- plus, static imports that are small mean better performance according to React docs
-*/
-
 function calculateCumulativeReturn(tableData) {
   let initialReturn = parseFloat(tableData[0].totalReturn);
   let currentReturn;
@@ -52,10 +46,7 @@ const Table = () => {
 
     return updatedRows.map((row) => {
       const { year, totalReturn, cumulativeReturn } = row;
-      // let isRed = false
-      // if(parseFloat(cumulativeReturn) < 0){
-      //   isRed = true;
-      // }
+
       return (
         <tr key={year}>
           <Row
