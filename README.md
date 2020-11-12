@@ -3,6 +3,18 @@
 ### Project Overview ###
 Bootstrapped with create-react-app, this is a single page application (SPA) that displays the S&P 500 index returns by year. The app is responsive, and will resize to keep the table readable on smaller screens.
 
+### Deployment Proof of Concept ###
+visit http://retireup-ui.s3-website.us-east-2.amazonaws.com/ to see the app hosted on an AWS s3 bucket
+
+Steps:
+1. create and AWS account and install the CLI
+2. navigate to parent directory
+3. run "npm run cloudBuild && npm run cloudDeploy"
+4. log on to AWS console, navigate to the newly created bucket
+5. click on the bucket, click on properties, turn on static website hosting
+
+The table will be empty as the JSON file downloaded and accessed by Table.js is not yet in the build folder
+
 ### Components ###
 There are 3 custom components in this application: Table, Row, and Header.
 
